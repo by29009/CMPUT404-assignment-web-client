@@ -74,12 +74,22 @@ class HTTPClient(object):
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
+        arg_string = argstring_from_args(args)
 
         request = 'POST {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
         request += 'Host: {0}\r\n'.format(host_from_url(url))
         request += 'Accept: */*\r\n'
 
+        if arg_string != '':
+            request += 'Content-Length: {0}'.format(len(arg_string)) + '\r\n'
+            request += 'Content-Type : application/x-www-form-urlencoded' + '\r\n'
+
         request += '\r\n'
+
+        if arg_string != '':
+            request += arg_string + '\r\n'
+            request += '\r\n'
+
         response = do_request(url, request)
         code, body = parse_response(response)
         return HTTPResponse(code, body)

@@ -86,8 +86,6 @@ def echo_post(self):
     self.end_headers()
     self.wfile.write(json.dumps(post_data))
 
-
-
 class TestHTTPClient(unittest.TestCase):
     httpd = None
     running = False

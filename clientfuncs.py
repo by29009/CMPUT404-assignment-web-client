@@ -56,7 +56,7 @@ def do_request(url, request):
         host, port = splitUrl[0], splitUrl[1]
         clientSocket.connect((host, int(port)))
 
-    print(request + '\n')
+    # print(request + '\n')
     clientSocket.sendall(request)
 
     return recvall(clientSocket)
