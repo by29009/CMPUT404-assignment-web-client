@@ -24,6 +24,8 @@ import re
 # you may use urllib to encode data appropriately
 import urllib
 
+from clientfuncs import *
+
 def help():
     print "httpclient.py [GET/POST] [URL]\n"
 
@@ -61,13 +63,17 @@ class HTTPClient(object):
         return str(buffer)
 
     def GET(self, url, args=None):
-        code = 500
-        body = ""
+        request = 'GET {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
+
+        response = do_request(url, request)
+        code, body = parse_response(response)
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
-        code = 500
-        body = ""
+        request = 'POST {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
+
+        response = do_request(url, request)
+        code, body = parse_response(response)
         return HTTPResponse(code, body)
 
     def command(self, url, command="GET", args=None):
