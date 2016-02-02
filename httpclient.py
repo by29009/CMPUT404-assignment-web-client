@@ -63,7 +63,8 @@ class HTTPClient(object):
         return str(buffer)
 
     def GET(self, url, args=None):
-        request = 'GET {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
+        arg_string = argstring_from_args(args)
+        request = 'GET {0} HTTP/1.1\r\n'.format(geturl_from_url(url) + arg_string)
         request += 'Host: {0}\r\n'.format(host_from_url(url))
         request += 'Accept: */*\r\n'
 
@@ -73,6 +74,7 @@ class HTTPClient(object):
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
+
         request = 'POST {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
         request += 'Host: {0}\r\n'.format(host_from_url(url))
         request += 'Accept: */*\r\n'

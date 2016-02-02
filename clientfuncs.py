@@ -2,6 +2,28 @@ import socket
 import re
 import urllib
 
+def received_complete_response(buffer):
+    """
+    Fixes issue with sites returning 302 and keeping the conn open
+    (recvall given to us will wait forever for conn close?)
+    """
+    headers = buffer.split('\r\n')
+    content_length = [h for h in headers if h[:15] == 'Content-Length:']
+    if content_length == []:
+        return False
+    content_length = int(content_length[0][15:])
+
+    if buffer.find('\r\n\r\n') == -1:
+        return False
+
+    split_buffer = buffer.split('\r\n\r\n')
+    if (len(split_buffer) == 1 or split_buffer[1] == '') and content_length == 0:
+        return True
+    if len(split_buffer[1]) >= content_length:
+        return True
+
+    return False
+
 def recvall(sock):
     buffer = bytearray()
     done = False
@@ -9,8 +31,11 @@ def recvall(sock):
         part = sock.recv(1024)
         if (part):
             buffer.extend(part)
+            if received_complete_response(buffer):
+                break
         else:
             done = not part
+
     return str(buffer)
 
 def do_request(url, request):
@@ -67,3 +92,18 @@ def parse_response(response):
     code = int(code_header.split(' ')[1])
 
     return code, body
+
+def argstring_from_args(args):
+    """
+    args is a dict
+    """
+    if args is None:
+        return ''
+    else:
+        return urllib.urlencode(args)
+        # arg_string = '?'
+        # for key in args:
+        #     arg = '{0}={1}'.format(key, urllib.urlencode(args[key]))
+        #     arg_string += arg
+        #     arg_string += '&'
+        # arg_string = arg_string[:-1]
