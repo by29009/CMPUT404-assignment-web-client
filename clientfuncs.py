@@ -31,6 +31,7 @@ def do_request(url, request):
         host, port = splitUrl[0], splitUrl[1]
         clientSocket.connect((host, int(port)))
 
+    print(request + '\n')
     clientSocket.sendall(request)
 
     return recvall(clientSocket)
@@ -40,9 +41,19 @@ def geturl_from_url(url):
     Return the /url for the request
     Example: 'localhost/hi/ha.html' -> '/hi/ha.html'
     """
+    url = url.replace('http://', '')
     if url.find('/') == -1:
         return '/'
     return url[url.find('/'):]
+
+def host_from_url(url):
+    """
+    Returns host for Host header
+    """
+    url = url.replace('http://', '')
+    if url.find('/') != -1:
+        url = url[:url.find('/')]
+    return url
 
 def parse_response(response):
     """
@@ -52,7 +63,7 @@ def parse_response(response):
     headers = (response.split('\r\n\r\n')[0]).strip().split('\r\n')
     body = response.split('\r\n\r\n')[1]
 
-    code_header = [header for header in headers if header[:8] == 'HTTP/1.1'][0]
+    code_header = [header for header in headers if header[:8] == 'HTTP/1.1' or header[:8] == 'HTTP/1.0'][0]
     code = int(code_header.split(' ')[1])
 
     return code, body

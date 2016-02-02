@@ -123,6 +123,7 @@ class TestHTTPClient(unittest.TestCase):
 
     def test404GET(self):
         '''Test against 404 errors'''
+        print "Running test 1"
         MyHTTPHandler.get = nothing_available
         http = httpclass.HTTPClient()
         req = http.GET("http://%s:%d/49872398432" % (BASEHOST,BASEPORT) )
@@ -131,6 +132,7 @@ class TestHTTPClient(unittest.TestCase):
 
     def test404POST(self):
         '''Test against 404 errors'''
+        print "Running test 2"
         MyHTTPHandler.post = nothing_available
         http = httpclass.HTTPClient()
         req = http.POST("http://%s:%d/49872398432" % (BASEHOST,BASEPORT) )
@@ -139,6 +141,7 @@ class TestHTTPClient(unittest.TestCase):
 
     def testGET(self):
         '''Test HTTP GET'''
+        print "Running test 3"
         MyHTTPHandler.get = echo_path_get
         http = httpclass.HTTPClient()
         path = "abcdef/gjkd/dsadas"
@@ -152,17 +155,20 @@ class TestHTTPClient(unittest.TestCase):
     def testInternetGets(self):
         '''Test HTTP Get in the wild, these webservers are far less
            forgiving'''
+        print "Running test 4"
         MyHTTPHandler.get = echo_path_get
         http = httpclass.HTTPClient()        
         urls = [
-            "http://www.cs.ualberta.ca/",
+            #"http://www.cs.ualberta.ca/",
             "http://softwareprocess.es/static/SoftwareProcess.es.html",
             "http://c2.com/cgi/wiki?CommonLispHyperSpec",
             "http://slashdot.org"
             ]
         for url in urls:
             try:
+                print "qq1"
                 req = http.GET( url )
+                print "qq2"
             except Exception as e:
                 print "An Exception was thrown for %s" % url
                 self.assertTrue( False, "An Exception was thrown for %s %s" % (url,e))
@@ -178,6 +184,7 @@ class TestHTTPClient(unittest.TestCase):
     
     def testPOST(self):
         '''Test HTTP POST with an echo server'''
+        print "Running test 5"
         MyHTTPHandler.post = echo_post
         http = httpclass.HTTPClient()
         path = "post_echoer"
@@ -199,7 +206,7 @@ class TestHTTPClient(unittest.TestCase):
             self.assertTrue(args[key] == outargs[key][0], "Key [%s] not found" % key)
 
     @classmethod
-    def tearDownClass(self):        
+    def tearDownClass(self):
         if (TestHTTPClient.httpd!=None):
             print "HTTP Shutdown in tearDown\n"
             TestHTTPClient.httpd.shutdown()
@@ -207,6 +214,7 @@ class TestHTTPClient(unittest.TestCase):
             time.sleep(1)
 
 def test_test_webserver():
+    print "Running test 6"
     print("http://%s:%d/dsadsadsadsa\n" % (BASEHOST,BASEPORT) )
     MyHTTPHandler.get = echo_path_get
     MyHTTPHandler.post = echo_post

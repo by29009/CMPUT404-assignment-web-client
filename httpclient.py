@@ -64,14 +64,20 @@ class HTTPClient(object):
 
     def GET(self, url, args=None):
         request = 'GET {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
+        request += 'Host: {0}\r\n'.format(host_from_url(url))
+        request += 'Accept: */*\r\n'
 
+        request += '\r\n'
         response = do_request(url, request)
         code, body = parse_response(response)
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
         request = 'POST {0} HTTP/1.1\r\n'.format(geturl_from_url(url))
+        request += 'Host: {0}\r\n'.format(host_from_url(url))
+        request += 'Accept: */*\r\n'
 
+        request += '\r\n'
         response = do_request(url, request)
         code, body = parse_response(response)
         return HTTPResponse(code, body)
