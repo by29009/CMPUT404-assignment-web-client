@@ -164,9 +164,7 @@ class TestHTTPClient(unittest.TestCase):
             ]
         for url in urls:
             try:
-                print "qq1"
                 req = http.GET( url )
-                print "qq2"
             except Exception as e:
                 print "An Exception was thrown for %s" % url
                 self.assertTrue( False, "An Exception was thrown for %s %s" % (url,e))
